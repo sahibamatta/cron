@@ -24,8 +24,7 @@ public class CronService {
 
     public List<CronDetails> getActiveURL(){
 
-        List<CronDetails> cronDetailsList = cronDetailsRepository.getActiveURL("active");
-
+        List<CronDetails> cronDetailsList = cronDetailsRepository.getActiveURL();
         return cronDetailsList;
     }
 
