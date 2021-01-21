@@ -1,7 +1,7 @@
 package com.slackbot.cron.dto;
 
 
-public class SlackBotResponse {
+public class SlackBotResponseDto {
 	
 	@Override
 	public String toString() {
@@ -9,11 +9,11 @@ public class SlackBotResponse {
 		return super.toString();
 	}
 
-	public SlackBotResponse(){
+	public SlackBotResponseDto(){
 		
 	}
 	
-	public SlackBotResponse(String message) {
+	public SlackBotResponseDto(String message) {
 		super();
 		this.message = message;
 	}

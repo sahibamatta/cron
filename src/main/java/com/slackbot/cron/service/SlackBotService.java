@@ -1,50 +1,64 @@
 package com.slackbot.cron.service;
 
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 import org.springframework.stereotype.Service;
 
-import com.slackbot.cron.dto.SlackBotResponse;
+import com.slackbot.cron.dto.SlackBotRequestDto;
+import com.slackbot.cron.dto.SlackBotResponseDto;
 import com.slackbot.cron.enums.Command;
+import com.slackbot.cron.model.CronDetails;
 
 @Service
 public class SlackBotService {
 
-	public SlackBotResponse processMessageAndReturnResponse(String eventsText) {
+	public String processMessageAndReturnResponse(String eventsText) {
 
 		System.out.println("in validateTextAndDecodeMessage eventsText is: ["+eventsText+"]");
 
-		SlackBotResponse slackBotResponse = new SlackBotResponse();
+		SlackBotResponseDto slackBotResponse = new SlackBotResponseDto();
 
-		slackBotResponse = validateText(eventsText, slackBotResponse);
-		
-		System.out.println("in validateTextAndDecodeMessage eventsText is: ["+eventsText+"]");
+		slackBotResponse = validateTextAndGenerateResponse(eventsText, slackBotResponse);
 
-		slackBotResponse.setMessage("Enter help to explore");
+		System.out.println("SlackBotResponse is ["+slackBotResponse.toString()+"]");
 
-		return slackBotResponse;
+		return slackBotResponse.getMessage();
 	}
 
-	private SlackBotResponse validateText(String eventsText, SlackBotResponse slackBotResponse) {
-		
+	private SlackBotResponseDto validateTextAndGenerateResponse(String eventsText, SlackBotResponseDto slackBotResponse) {
+
+		System.out.println("in validateTextAndGenerateResponse");
+
 		if(Objects.nonNull(eventsText)) {
 
 			String[] textSplit = eventsText.split(" ");
 
-			if(textSplit.length >= 5) {
+			String cmd = textSplit[0];
 
-				slackBotResponse.setMessage("Please enter a option. Use help command to know more");
+			slackBotResponse = validateCommand(cmd, slackBotResponse);
+
+			if(!slackBotResponse.getMessage().equals("")) {
+				return slackBotResponse;
 			}
 
-			String cmd = textSplit[0];
-			
-			slackBotResponse = validateCommand(cmd, slackBotResponse);
+			slackBotResponse = generateResponse(cmd, eventsText, slackBotResponse);
+
+			if(!slackBotResponse.getMessage().equals("")) {
+				return slackBotResponse;
+			}
 		}
-		
+
+		else {
+
+			slackBotResponse.setMessage("Enter help to explore");
+		}
+
 		return slackBotResponse;
 	}
 
-	public SlackBotResponse validateCommand(String command, SlackBotResponse slackbotResponse) {
+	private SlackBotResponseDto validateCommand(String command, SlackBotResponseDto slackbotResponse) {
 
 		System.out.println("in validateCommand command ["+command+"]");
 
@@ -56,6 +70,111 @@ public class SlackBotService {
 
 		return slackbotResponse;
 	}
+
+	private SlackBotResponseDto generateResponse(String cmd, String eventText, SlackBotResponseDto slackBotResponse) {
+
+		Command command = Command.fromString(cmd);
+		String message = "";
+
+		switch (command) {
+		case HELP:
+			message = helpMessage();
+			break;
+
+		case LIST:
+			message = listCommandMessage();
+			break;
+
+		case CREATE:
+			message = createCronMessage(eventText);
+			break;
+		}
+
+		slackBotResponse.setMessage(message);
+		return slackBotResponse;
+	}
+
+	private String helpMessage() {
+		System.out.println("in helpMessage");
+
+		String message = "Help Section!!!!";
+		return message;
+	}
+
+	private String listCommandMessage() {
+		System.out.println("in listCommandMessage");
+
+		String line1 = "Help";
+		String line2 = "List";
+		String line3 = "Create";
+
+		String message = line1 + "\r\n" + line2 + "\r\n" + line3;
+
+		return message;
+	}
+
+	private String createCronMessage(String eventText) {
+		System.out.println("in createCronMessage");
+
+		return createSchedulerAndReturnMessage(eventText);
+	}
+
+	private String createSchedulerAndReturnMessage(String eventText) {
+		System.out.println("in convertToSlackbotRequestObject");
+
+		String [] textSplit = eventText.split(" ");
+
+		if(textSplit.length != 5) {
+			return "Please enter correct format. Refer help section";
+		}
+
+		SlackBotRequestDto slackBotRequestDto = new SlackBotRequestDto();
+
+		slackBotRequestDto.setMethod(textSplit[1]);
+		slackBotRequestDto.setRoute(textSplit[2]);
+
+		try {
+
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+			LocalTime localTime = LocalTime.parse(textSplit[3], formatter);
+			slackBotRequestDto.setStartTime(localTime);
+		}
+
+		catch(Exception e) {
+			System.out.println("Starttime exception is:"+e);
+			return "Incorrect start time format. Valid format is HH:mm:ss";
+		}
+
+		try {
+			int frequency = Integer.parseInt(textSplit[4]);
+			slackBotRequestDto.setFrequency(frequency);
+		}
+
+		catch(Exception e) {
+			System.out.println("Frequency exception is:"+e);
+			return "Incorrect frequency format. Frequency must be integer";
+		}
+
+		CronDetails cronDetails = dtoToEntity(slackBotRequestDto);
+
+		//TODO: entity create call -- put in try/catch
+
+		return "Woohoo! Scheduler Configured Successfully";
+
+	}
+
+	private CronDetails dtoToEntity(SlackBotRequestDto slackBotRequestDto) {
+
+		System.out.println("in dtoToEntity, dto is ["+slackBotRequestDto.toString()+"]");
+		CronDetails cronDetails = new CronDetails();
+		cronDetails.setMethod(slackBotRequestDto.getMethod());
+		cronDetails.setEndPoint(slackBotRequestDto.getRoute());
+		cronDetails.setCronStartTime(slackBotRequestDto.getStartTime());
+		cronDetails.setRepeatDuration(slackBotRequestDto.getFrequency()+"");
+
+		return cronDetails;
+	}
+
 
 	/*
 	 * public SlackBotResponse validateCommandAndDecodeMessage(String eventsText) {
@@ -76,7 +195,7 @@ public class SlackBotService {
 	{
 		System.out.println("in processMessageAndSaveForScheduling ----");
 		if(Objects.nonNull(eventsText)) {
-			
+
 		}
 	}
 

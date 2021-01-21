@@ -4,7 +4,7 @@ import com.slack.api.bolt.App;
 
 import com.slack.api.methods.response.chat.ChatPostMessageResponse;
 import com.slack.api.model.event.MessageEvent;
-import com.slackbot.cron.dto.SlackBotResponse;
+import com.slackbot.cron.dto.SlackBotResponseDto;
 import com.slackbot.cron.service.SlackBotService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,8 +27,8 @@ public class SlackApp {
 
         app.command("/cronbot", (req, ctx) -> {
             System.out.println(req);
-            SlackBotResponse slackBotResponse = slackBotService.processMessageAndReturnResponse(req.getPayload().getText());
-            return ctx.ack(slackBotResponse.toString());
+            String slackBotResponse = slackBotService.processMessageAndReturnResponse(req.getPayload().getText());
+            return ctx.ack(slackBotResponse);
         });
 
 		/*
@@ -53,13 +53,13 @@ public class SlackApp {
         app.event(AppMentionEvent.class, (payload, ctx) -> {
             System.out.println(payload);
             
-            SlackBotResponse slackBotResponse = slackBotService.processMessageAndReturnResponse(payload.getEvent().getText());
+            String slackBotResponse = slackBotService.processMessageAndReturnResponse(payload.getEvent().getText());
             
             AppMentionEvent event = payload.getEvent();
                 ctx.client().chatPostMessage(r -> r
                 .channel(event.getChannel())
                 .threadTs(event.getTs())
-                .text(slackBotResponse.toString()));
+                .text(slackBotResponse));
 
             return ctx.ack();
         });
