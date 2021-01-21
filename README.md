@@ -26,3 +26,7 @@ You should also be able to start the Spring boot project from intellij and see t
 
 # Check out APIs
 http://localhost:8080/cron/swagger-ui.html
+
+# Add following ENV variables before starting the server.
+SLACK_SIGNING_SECRET=<YOUR_SIGNIN_SECRET> 
+SLACK_BOT_TOKEN=<YOUR_BOT_TOKEN>
