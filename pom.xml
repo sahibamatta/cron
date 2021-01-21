@@ -49,6 +49,11 @@
 		   <version>2.7.0</version>
 		</dependency>
 		<dependency>
+		   <groupId>com.kreait.slack</groupId>
+		   <artifactId>slack-spring-boot-starter</artifactId>
+		   <version>2.0.0</version>
+		</dependency>
+		<dependency>
   			<groupId>com.slack.api</groupId>
   			<artifactId>bolt</artifactId>
   			<version>1.5.2</version>
