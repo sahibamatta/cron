@@ -22,9 +22,13 @@ public class CronDetails {
     @Column(columnDefinition = "TIME")
     private LocalTime prevRunTime;
     @Column(columnDefinition = "TIME")
-    private LocalTime startTime;
+    private LocalTime cronStartTime;
+    @Column(columnDefinition = "TIME")
+    private LocalTime cronEndTime;
     private String status;
     private int numberOfRuns;
+    private int maxNumberOfRuns;
+
 
     public String getEndPoint() {
         return endPoint;
@@ -66,14 +70,6 @@ public class CronDetails {
         this.prevRunTime = prevRunTime;
     }
 
-    public LocalTime getStartTime() {
-        return startTime;
-    }
-
-    public void setStartTime(LocalTime startTime) {
-        this.startTime = startTime;
-    }
-
     public String getStatus() {
         return status;
     }
@@ -96,5 +92,29 @@ public class CronDetails {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public LocalTime getCronStartTime() {
+        return cronStartTime;
+    }
+
+    public void setCronStartTime(LocalTime cronStartTime) {
+        this.cronStartTime = cronStartTime;
+    }
+
+    public LocalTime getCronEndTime() {
+        return cronEndTime;
+    }
+
+    public void setCronEndTime(LocalTime cronEndTime) {
+        this.cronEndTime = cronEndTime;
+    }
+
+    public int getMaxNumberOfRuns() {
+        return maxNumberOfRuns;
+    }
+
+    public void setMaxNumberOfRuns(int maxNumberOfRuns) {
+        this.maxNumberOfRuns = maxNumberOfRuns;
     }
 }

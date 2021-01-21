@@ -22,21 +22,44 @@ public class CronService {
         cronDetailsRepository.save(cronDetails);
     }
 
+    public List<CronDetails> getActiveURL(){
+
+        List<CronDetails> cronDetailsList = cronDetailsRepository.getActiveURL("active");
+
+        return cronDetailsList;
+    }
+
+    // Amrendra - This function will accept list of active cron details and we
+    // need to update prev_run_time, next_run_time, number_of_runs, status
+    public void updateCronDetails(List<CronDetails> cronDetailsList) {
+
+
+    }
+
+    public List<CronDetails> getAll(){
+        List<CronDetails> cronDetailsList = new ArrayList<>();
+        cronDetailsRepository.findAll().forEach(cronDetailsList::add);
+        return cronDetailsList;
+
+    }
+
     private CronDetails createCronDetails (String url, String method, String repeatDuration){
 
         CronDetails cronDetails = new CronDetails();
         cronDetails.setEndPoint("http://google.com");
         cronDetails.setMethod("get");
         LocalTime currentTime = LocalTime.now();
-        LocalTime startTime = currentTime.plusMinutes(2);
-        cronDetails.setStartTime(startTime);
-
-        LocalTime nextRepeatDurationHour = getNextRunTime(repeatDuration, startTime);
+        LocalTime cronEndTime = currentTime.plusHours(2);
+        LocalTime cronStartTime = currentTime.plusMinutes(2);
+        cronDetails.setCronStartTime(cronStartTime);
+        cronDetails.setPrevRunTime(cronStartTime);
+        LocalTime nextRepeatDurationHour = getNextRunTime(repeatDuration, cronStartTime);
         cronDetails.setNextRunTime(nextRepeatDurationHour);
-
+        cronDetails.setCronEndTime(cronEndTime);
         cronDetails.setRepeatDuration(repeatDuration);
         cronDetails.setNumberOfRuns(100);
         cronDetails.setStatus("active");
+        cronDetails.setMaxNumberOfRuns(20);
 
         return cronDetails;
     }
@@ -61,14 +84,5 @@ public class CronService {
 
 
 
-    public void getActiveRows(){
-      cronDetailsRepository.getActiveURL("active");
-    }
 
-    public List<CronDetails> getAll(){
-        List<CronDetails> cronDetailsList = new ArrayList<>();
-        cronDetailsRepository.findAll().forEach(cronDetailsList::add);
-        return cronDetailsList;
-
-    }
 }
