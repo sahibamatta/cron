@@ -12,8 +12,8 @@ import java.util.Date;
 @Entity(name = "cron_details")
 public class CronDetails {
 
-    @Id
-    private String id;
+    @Id @GeneratedValue
+    private Integer id;
     private String endPoint;
     private String method;
     private String repeatDuration;
@@ -90,11 +90,11 @@ public class CronDetails {
         this.numberOfRuns = numberOfRuns;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public Integer getId() {
+        return id;
     }
 
-    public String getId() {
-        return id;
+    public void setId(Integer id) {
+        this.id = id;
     }
 }
