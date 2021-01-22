@@ -97,7 +97,20 @@ public class SlackBotService {
 	private String helpMessage() {
 		System.out.println("in helpMessage");
 
-		String message = "Help Section!!!!";
+		String line1 = "Help Section!!!!";
+		String line2 = "Usage:";
+		String line3 = "@CronBot list";
+		String line4 = "@CronBot create";
+
+		String line5 = "list:";
+		String line6 = "To list all commands";
+
+		String line7 = "create:";
+		String line8 = "To create and schedule a cron job";
+
+		String message = line1 + "\r\n\r\n" + line2 + "\r\n" + line3 + "\r\n" + line4 
+				+ "\r\n\r\n" + line5 + "\r\n" + line6 
+				+ "\r\n\r\n" + line7 + "\r\n" + line8 ;
 		return message;
 	}
 
@@ -174,29 +187,4 @@ public class SlackBotService {
 
 		return cronDetails;
 	}
-
-
-	/*
-	 * public SlackBotResponse validateCommandAndDecodeMessage(String eventsText) {
-	 * 
-	 * System.out.println("in validateCommandAndDecodeMessage ----");
-	 * 
-	 * if(Objects.nonNull(eventsText)) { SlackBotRequestText slackBotRequestText =
-	 * gson.fromJson(eventsText, SlackBotRequestText.class);
-	 * 
-	 * String command= slackBotRequestText.getCommand();
-	 * 
-	 * }
-	 * 
-	 * }
-	 */
-
-	public void processMessageAndSaveForScheduling(String eventsText)
-	{
-		System.out.println("in processMessageAndSaveForScheduling ----");
-		if(Objects.nonNull(eventsText)) {
-
-		}
-	}
-
 }
