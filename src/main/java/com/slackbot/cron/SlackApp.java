@@ -27,7 +27,11 @@ public class SlackApp {
 
         app.command("/cronbot", (req, ctx) -> {
             System.out.println(req);
-            String slackBotResponse = slackBotService.processMessageAndReturnResponse(req.getPayload().getText());
+
+            String text = req.getPayload().getText();
+            text = "random " + text;
+
+            String slackBotResponse = slackBotService.processMessageAndReturnResponse(text);
             return ctx.ack(slackBotResponse);
         });
 
@@ -58,7 +62,6 @@ public class SlackApp {
             AppMentionEvent event = payload.getEvent();
                 ctx.client().chatPostMessage(r -> r
                 .channel(event.getChannel())
-                .threadTs(event.getTs())
                 .text(slackBotResponse));
 
             return ctx.ack();
