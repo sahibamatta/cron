@@ -43,6 +43,8 @@ public class CronService {
             {
                 cron.setStatus("inactive");
             }
+
+            cronDetailsRepository.save(cron);
         }
     }
 
