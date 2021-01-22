@@ -197,9 +197,10 @@ public class SlackBotService {
 		System.out.println("in dtoToEntity, dto is ["+slackBotRequestDto.toString()+"]");
 		CronDetails cronDetails = new CronDetails();
 		cronDetails.setMethod(slackBotRequestDto.getMethod());
-		cronDetails.setEndPoint(slackBotRequestDto.getRoute());
-		cronDetails.setCronStartTime(slackBotRequestDto.getStartTime());
-		cronDetails.setRepeatDuration(slackBotRequestDto.getFrequency()+"");
+		cronDetails.setEndPoint(slackBotRequestDto.getRoute().substring(1, slackBotRequestDto.getRoute().length()-1));
+		cronDetails.setCronStartTime(slackBotRequestDto.getStartTime());        
+		// cronDetails.setRepeatDuration(slackBotRequestDto.getFrequency()+"");
+		cronDetails.setRepeatDuration("00:00:" + slackBotRequestDto.getFrequency());
 
 		return cronDetails;
 	}
