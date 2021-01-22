@@ -87,7 +87,7 @@ public class CronService {
         LocalTime cronEndTime = currentTime.plusHours(5);
         LocalTime cronStartTime = currentTime.plusMinutes(2);
 
-        cronDetails.setCronStartTime(cronStartTime);
+        //cronDetails.setCronStartTime(cronStartTime);
         cronDetails.setPrevRunTime(cronStartTime);
 
         LocalTime nextRepeatDurationHour = getNextRunTime(cronDetails.getRepeatDuration(), cronStartTime);

@@ -4,6 +4,7 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.slackbot.cron.dto.SlackBotRequestDto;
@@ -13,6 +14,9 @@ import com.slackbot.cron.model.CronDetails;
 
 @Service
 public class SlackBotService {
+
+	@Autowired
+	private CronService cronService;
 
 	public String processMessageAndReturnResponse(String eventsText) {
 
@@ -170,9 +174,21 @@ public class SlackBotService {
 
 		CronDetails cronDetails = dtoToEntity(slackBotRequestDto);
 
+		try
+		{
+			cronService.addNewCron(cronDetails);
+			return "Woohoo! Scheduler Configured Successfully";
+
+		}
+
+		catch(Exception e) {
+			System.out.println("exception in scheduling");
+			return "Some Error Occured";
+
+		}
+
 		//TODO: entity create call -- put in try/catch
 
-		return "Woohoo! Scheduler Configured Successfully";
 
 	}
 

@@ -1,14 +1,11 @@
 package com.slackbot.cron;
 
-import com.slack.api.bolt.App;
-import com.slack.api.bolt.servlet.SlackAppServlet;
-import com.slackbot.cron.service.CronService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import javax.servlet.annotation.WebServlet;
+
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.annotation.WebServlet;
+import com.slack.api.bolt.App;
+import com.slack.api.bolt.servlet.SlackAppServlet;
 
 @WebServlet("/slack/events")
 @RestController

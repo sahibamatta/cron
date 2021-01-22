@@ -17,7 +17,7 @@ public class SaveController {
     @GetMapping("/hello")
     public String sayHello() {
         System.out.println("Reached 123");
-        cronService.saveDetails("google.com","get", "01:01:01");
+		cronService.saveDetails("google.com","get", "01:01:01");
         List<CronDetails> cronDetailsList = cronService.getActiveURL();
 
         List<CronDetails> cronDetailsListAll = cronService.getAll();
