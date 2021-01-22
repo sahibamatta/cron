@@ -7,6 +7,15 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
+import lombok.Generated;
+import lombok.Getter;
+import lombok.Setter;
+
+import javax.persistence.*;
+import java.sql.Time;
+import java.time.LocalTime;
+import java.util.Date;
+
 @Entity(name = "cron_details")
 public class CronDetails {
 
