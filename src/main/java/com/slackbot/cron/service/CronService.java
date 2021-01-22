@@ -16,11 +16,16 @@ public class CronService {
     private CronDetailsRepository cronDetailsRepository;
 
 
-    public void saveDetails (String url, String method, String repeatDuration){
-
-        CronDetails cronDetails = createCronDetails(url, method, repeatDuration);
-        cronDetailsRepository.save(cronDetails);
-    }
+//    public void saveDetails (String url, String method, String repeatDuration){
+//
+////        CronDetails cronDetails = createCronDetails(url, method, repeatDuration);
+//
+//        registerNewCron("http://localhost:3000/fa1d24a8-a5e7-4086-af63-498abd609bf3",
+//                "get", repeatDuration, LocalTime.now(),
+//                LocalTime.now().plusHours(2), 100 );
+//
+////        cronDetailsRepository.save(cronDetails);
+//    }
 
     public List<CronDetails> getActiveURL(){
 
@@ -55,26 +60,89 @@ public class CronService {
 
     }
 
-    private CronDetails createCronDetails (String url, String method, String repeatDuration){
+//    private CronDetails createCronDetails (String url, String method, String repeatDuration){
+//
+//        CronDetails cronDetails = new CronDetails();
+//        cronDetails.setEndPoint("http://google.com");
+//        cronDetails.setMethod("get");
+//        LocalTime currentTime = LocalTime.now();
+//        LocalTime cronEndTime = currentTime.plusHours(2);
+//        LocalTime cronStartTime = currentTime.plusMinutes(2);
+//        cronDetails.setCronStartTime(cronStartTime);
+//        cronDetails.setPrevRunTime(cronStartTime);
+//        LocalTime nextRepeatDurationHour = getNextRunTime(repeatDuration, cronStartTime);
+//        cronDetails.setNextRunTime(nextRepeatDurationHour);
+//        cronDetails.setCronEndTime(cronEndTime);
+//        cronDetails.setRepeatDuration(repeatDuration);
+//        cronDetails.setNumberOfRuns(100);
+//        cronDetails.setStatus("active");
+//        cronDetails.setMaxNumberOfRuns(20);
+//
+//        return cronDetails;
+//    }
 
-        CronDetails cronDetails = new CronDetails();
-        cronDetails.setEndPoint("http://google.com");
-        cronDetails.setMethod("get");
+    public void addNewCron(CronDetails cronDetails)
+    {
         LocalTime currentTime = LocalTime.now();
-        LocalTime cronEndTime = currentTime.plusHours(2);
+        LocalTime cronEndTime = currentTime.plusHours(5);
         LocalTime cronStartTime = currentTime.plusMinutes(2);
+
         cronDetails.setCronStartTime(cronStartTime);
         cronDetails.setPrevRunTime(cronStartTime);
-        LocalTime nextRepeatDurationHour = getNextRunTime(repeatDuration, cronStartTime);
-        cronDetails.setNextRunTime(nextRepeatDurationHour);
-        cronDetails.setCronEndTime(cronEndTime);
-        cronDetails.setRepeatDuration(repeatDuration);
-        cronDetails.setNumberOfRuns(100);
-        cronDetails.setStatus("active");
-        cronDetails.setMaxNumberOfRuns(20);
 
-        return cronDetails;
+        LocalTime nextRepeatDurationHour = getNextRunTime(cronDetails.getRepeatDuration(), cronStartTime);
+        cronDetails.setNextRunTime(nextRepeatDurationHour);
+
+        cronDetails.setCronEndTime(cronEndTime);
+
+        cronDetails.setNumberOfRuns(0);
+
+        // setting every new cron as active even if it's start time is not reached yet
+        // as nextRunTime will handle it
+        cronDetails.setStatus("active");
+
+        cronDetails.setMaxNumberOfRuns(100);
+
+        cronDetailsRepository.save(cronDetails);
     }
+
+//    public void registerNewCron(
+//            String endPoint,
+//            String method,
+//            String repeatDuration,
+//            LocalTime startTime,
+//            LocalTime endTime,
+//            int maxNumberOfRuns
+//    )
+//    {
+//        CronDetails cronDetails = new CronDetails();
+//
+//        cronDetails.setEndPoint(endPoint);
+//        cronDetails.setMethod(method);
+//
+//        LocalTime currentTime = LocalTime.now();
+//        LocalTime cronEndTime = endTime;
+//        LocalTime cronStartTime = currentTime.plusMinutes(2);
+//
+//        cronDetails.setCronStartTime(cronStartTime);
+//        cronDetails.setPrevRunTime(cronStartTime);
+//
+//        LocalTime nextRepeatDurationHour = getNextRunTime(repeatDuration, cronStartTime);
+//        cronDetails.setNextRunTime(nextRepeatDurationHour);
+//
+//        cronDetails.setCronEndTime(cronEndTime);
+//        cronDetails.setRepeatDuration(repeatDuration);
+//
+//        cronDetails.setNumberOfRuns(0);
+//
+//        // setting every new cron as active even if it's start time is not reached yet
+//        // as nextRunTime will handle it
+//        cronDetails.setStatus("active");
+//
+//        cronDetails.setMaxNumberOfRuns(maxNumberOfRuns);
+//
+//        cronDetailsRepository.save(cronDetails);
+//    }
 
     private LocalTime getNextRunTime(String repeatDuration, LocalTime startTime) {
         int finalRepeatDurationHour = getRepeatDurationDay(repeatDuration.split(":"), 0);
