@@ -35,17 +35,17 @@ public class SlackBotService {
 
 			String[] textSplit = eventsText.split(" ");
 
-			String cmd = textSplit[0];
+			String cmd = textSplit[1];
 
 			slackBotResponse = validateCommand(cmd, slackBotResponse);
 
-			if(!slackBotResponse.getMessage().equals("")) {
+			if(Objects.nonNull(slackBotResponse) && Objects.nonNull(slackBotResponse.getMessage()) && !slackBotResponse.getMessage().equals("")) {
 				return slackBotResponse;
 			}
 
 			slackBotResponse = generateResponse(cmd, eventsText, slackBotResponse);
 
-			if(!slackBotResponse.getMessage().equals("")) {
+			if(Objects.nonNull(slackBotResponse) && Objects.nonNull(slackBotResponse.getMessage()) &&  !slackBotResponse.getMessage().equals("")) {
 				return slackBotResponse;
 			}
 		}
@@ -137,19 +137,19 @@ public class SlackBotService {
 
 		String [] textSplit = eventText.split(" ");
 
-		if(textSplit.length != 5) {
+		if(textSplit.length != 6) {
 			return "Please enter correct format. Refer help section";
 		}
 
 		SlackBotRequestDto slackBotRequestDto = new SlackBotRequestDto();
 
-		slackBotRequestDto.setMethod(textSplit[1]);
-		slackBotRequestDto.setRoute(textSplit[2]);
+		slackBotRequestDto.setMethod(textSplit[2]);
+		slackBotRequestDto.setRoute(textSplit[3]);
 
 		try {
 
 			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
-			LocalTime localTime = LocalTime.parse(textSplit[3], formatter);
+			LocalTime localTime = LocalTime.parse(textSplit[4], formatter);
 			slackBotRequestDto.setStartTime(localTime);
 		}
 
@@ -159,7 +159,7 @@ public class SlackBotService {
 		}
 
 		try {
-			int frequency = Integer.parseInt(textSplit[4]);
+			int frequency = Integer.parseInt(textSplit[5]);
 			slackBotRequestDto.setFrequency(frequency);
 		}
 
