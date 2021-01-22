@@ -32,7 +32,18 @@ public class CronService {
     // need to update prev_run_time, next_run_time, number_of_runs, status
     public void updateCronDetails(List<CronDetails> cronDetailsList) {
 
+        for (CronDetails cron: cronDetailsList)
+        {
+            cron.setPrevRunTime(cron.getNextRunTime());
+            cron.setNextRunTime(getNextRunTime(cron.getRepeatDuration(), cron.getCronStartTime()));
+            cron.setNumberOfRuns(cron.getNumberOfRuns() + 1);
 
+            if (cron.getNextRunTime().compareTo(cron.getCronEndTime()) > 0
+                    || cron.getNumberOfRuns() >= cron.getMaxNumberOfRuns())
+            {
+                cron.setStatus("inactive");
+            }
+        }
     }
 
     public List<CronDetails> getAll(){

@@ -18,22 +18,22 @@ public class RestClient {
         this.headers = new HttpHeaders();
     }
 
-    public String get(String server, String uri, String contentType, String body) {
+    public String get(String uri, String contentType, String body) {
 
         HttpEntity<String> requestEntity = new HttpEntity<String>(body, headers);
 
-        ResponseEntity<String> responseEntity = rest.exchange(server + uri, HttpMethod.GET, requestEntity, String.class);
+        ResponseEntity<String> responseEntity = rest.exchange(uri, HttpMethod.GET, requestEntity, String.class);
 
         this.setStatus(responseEntity.getStatusCode());
 
         return responseEntity.getBody();
     }
 
-    public String post(String server, String uri, String contentType, String body) {
+    public String post(String uri, String contentType, String body) {
 
         HttpEntity<String> requestEntity = new HttpEntity<String>(body, headers);
 
-        ResponseEntity<String> responseEntity = rest.exchange(server + uri, HttpMethod.POST, requestEntity, String.class);
+        ResponseEntity<String> responseEntity = rest.exchange(uri, HttpMethod.POST, requestEntity, String.class);
 
         this.setStatus(responseEntity.getStatusCode());
 
