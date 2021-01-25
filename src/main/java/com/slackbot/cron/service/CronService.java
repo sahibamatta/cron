@@ -85,7 +85,7 @@ public class CronService {
     {
         LocalTime currentTime = LocalTime.now();
         LocalTime cronEndTime = currentTime.plusHours(5);
-        LocalTime cronStartTime = currentTime.plusMinutes(2);
+        LocalTime cronStartTime = currentTime.plusSeconds(2);
 
         //cronDetails.setCronStartTime(cronStartTime);
         cronDetails.setPrevRunTime(cronStartTime);
@@ -122,7 +122,7 @@ public class CronService {
 
         LocalTime currentTime = LocalTime.now();
         LocalTime cronEndTime = endTime;
-        LocalTime cronStartTime = currentTime.plusMinutes(2);
+        LocalTime cronStartTime = currentTime.plusSeconds(2);
 
         cronDetails.setCronStartTime(cronStartTime);
         cronDetails.setPrevRunTime(cronStartTime);
